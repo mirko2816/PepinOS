@@ -25,7 +25,6 @@ start:
 
 ; cargar el núcleo
     xor ax, ax          ; AX = 0 (buena práctica antes de llamar a int 0x13)
-    int 0x13            ; Llamada a la interrupción 0x13 para leer sectores del disco
 
     push es             ; Guarda ES en la pila (se restaurará luego)
     mov ax, BASE        ; AX = 0x100, segmento donde se cargará el kernel (dirección física 0x1000)

@@ -6,17 +6,17 @@ jmp start
 %include "UTIL.INC"
 
 start:
-; initialisation des segments en 0x100
-    mov ax, 0x100
+; Inicializa el DS y ES en 0x100
+    mov ax, 0x100       ; Segmento base del kernel (dirección física 0x1000)
     mov ds, ax
-    mov es, ax
+    mov es, ax          ; Inicializa el segmento extra
 
-; initialisation du segment de pile
-    mov ax, 0x8000
-    mov ss, ax
-    mov sp, 0xf000
+; Inicializa el segmento de pila
+    mov ax, 0x8000      ; Segmento de pila (stack) → dirección 0x80000
+    mov ss, ax          ; Segmento de pila
+    mov sp, 0xf000      ; Puntero de pila. La pila empieza en 0x8F000 y crece hacia abajo.
 
-; affiche un msg
+; Muestra un mensaje
     mov si, msg00
     call afficher
 
