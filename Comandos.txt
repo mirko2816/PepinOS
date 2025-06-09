@@ -1,0 +1,17 @@
+Instalación de herramientas de desarrollo GCC
+    apt install build-essential
+
+Instalación del compilador de ensamblador
+    apt install nasm
+
+Instalación de QEMU
+    apt install qemu-system
+
+Compilar con NASM
+    nasm -f bin -o bootsect bootsect.asm
+
+Concatenar el binario con ceros y montar en el floppyA
+    cat bootsect /dev/zero | dd of=floppyA bs=512 count=2880
+
+Ejecutar QEMU con el disco 
+    qemu-system-i386 -boot a -fda floppyA
