@@ -20,7 +20,7 @@ start:
     mov [bootdrv], dl   ; BIOS pasa en DL el número de la unidad de arranque (ej. 0x00 disquete, 0x80 disco duro)
 
 ; mostrar un mensaje
-    mov si, msgDebut    ; SI apunta al mensaje "Chargement du kernel"
+    mov si, msgDebut    ; SI apunta al mensaje "Cargando el nucleo..."
     call afficher       ; Llama a la rutina que imprime cadenas carácter por carácter usando BIOS
 
 ; cargar el núcleo
@@ -45,7 +45,7 @@ start:
                         ; → Salta al kernel que acaba de ser cargado en 0x1000
 
 
-msgDebut: db "Cargando el núcleo", 13, 10, 0    ; Cadena de texto a imprimir (fin con 0)
+msgDebut: db "Cargando el nucleo...", 13, 10, 0    ; Cadena de texto a imprimir (fin con 0)
 
 bootdrv: db 0           ; Variable para almacenar el número de unidad de arranque
 
