@@ -1,7 +1,6 @@
 ; Esta version del arrancador cambia el CPU a modo protegido y salta al kernel.
-
-?fine BASE    0x100  ; 0x0100:0x0 = 0x1000
-?fine KSIZE   50     ; numero de sectores a cargar (50 * 512 = 25600 bytes)
+%define BASE    0x100  ; 0x0100:0x0 = 0x1000
+%define KSIZE   50     ; numero de sectores a cargar (50 * 512 = 25600 bytes)
 
 [BITS 16]
 [ORG 0x0]
