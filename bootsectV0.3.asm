@@ -1,5 +1,5 @@
-%define BASE   0x100  
-%define KSIZE  50  ; número de sectores de 512 bytes a cargar
+%define BASE    0x100  ; 0x0100:0x0 = 0x1000
+%define KSIZE   50     ; nombre de secteurs à charger
 
 [BITS 16]
 [ORG 0x0]
@@ -8,39 +8,39 @@ jmp start
 %include "UTIL.INC"
 start:
 
-; inicialización de segmentos en 0x07C0
-    mov ax, 0x07C0      ; AX = segmento base del bootloader (BIOS lo cargó en 0x7C00)
-    mov ds, ax          ; DS apunta al segmento de datos del bootloader
-    mov es, ax          ; ES también apunta ahí por si se necesita copiar datos
-    mov ax, 0x8000      ; Segmento para la pila (stack)
-    mov ss, ax          ; SS apunta al segmento de pila
-    mov sp, 0xf000      ; SP = desplazamiento de la pila -> pila empieza en 0x8F000
+; initialisation des segments en 0x07C0
+    mov ax, 0x07C0
+    mov ds, ax
+    mov es, ax
+    mov ax, 0x8000    ; stack en 0xFFFF
+    mov ss, ax
+    mov sp, 0xf000
 
-; Obtener unidad de arranque
-    mov [bootdrv], dl   ; BIOS pasa en DL el número de la unidad de arranque (ej. 0x00 disquete, 0x80 disco duro)
+; récupération de l'unité de boot
+    mov [bootdrv], dl    
 
-; mostrar un mensaje
-    mov si, msgDebut    ; SI apunta al mensaje "Cargando el nucleo..."
-    call afficher       ; Llama a la rutina que imprime cadenas carácter por carácter usando BIOS
+; affiche un msg
+    mov si, msgDebut
+    call afficher
 
-; cargar el núcleo
-    xor ax, ax          ; AX = 0 (buena práctica antes de llamar a int 0x13)
+; charger le noyau
+    xor ax, ax
+    int 0x13
 
-    push es             ; Guarda ES en la pila (se restaurará luego)
-    mov ax, BASE        ; AX = 0x100, segmento donde se cargará el kernel (dirección física 0x1000)
-    mov es, ax          ; ES apunta al lugar en memoria donde se cargará el kernel
-    mov bx, 0           ; BX = 0 (desplazamiento dentro del segmento ES)
+    push es
+    mov ax, BASE
+    mov es, ax
+    mov bx, 0
+    mov ah, 2
+    mov al, KSIZE
+    mov ch, 0
+    mov cl, 2
+    mov dh, 0
+    mov dl, [bootdrv]
+    int 0x13
+    pop es
 
-    mov ah, 2           ; AH = 2 (servicio de lectura de sectores del disco)
-    mov al, KSIZE       ; AL = número de sectores a leer (1 sector de 512 bytes)
-    mov ch, 0           ; CH = 0 (cylinder 0)
-    mov cl, 2           ; CL = 2 (sector 2, el primer sector es el de arranque)
-    mov dh, 0           ; DH = 0 (head 0)
-    mov dl, [bootdrv]   ; DL = unidad de arranque
-    int 0x13            ; Llamada a la interrupción 0x13 para leer el sector
-    pop es              ; Restaura ES desde la pila
-
-; initialisation du pointeur sur la GDT 
+; initialisation du pointeur sur la GDT
     mov ax, gdtend    ; calcule la limite de GDT
     mov bx, gdt
     sub ax, bx

@@ -1,4 +1,5 @@
 ; Esta version del arrancador cambia el CPU a modo protegido y salta al kernel.
+
 %define BASE    0x100  ; 0x0100:0x0 = 0x1000
 %define KSIZE   50     ; numero de sectores a cargar (50 * 512 = 25600 bytes)
 
@@ -57,16 +58,17 @@ start:
     mov dword [gdtptr+2], ecx
 
 ; paso a modo protegido
-    cli
-    lgdt [gdtptr]    ; carga la gdt
-    mov eax, cr0
-    or  ax, 1
+    cli                 ; desactiva interrupciones
+    ; Inicializa la GDT
+    lgdt [gdtptr]       ; carga la gdt
+    mov eax, cr0        ; lee el registro CR0
+    or  ax, 1           ; establece el bit PE (Protection Enable) a 1
     mov cr0, eax        ; PE puesto a 1 (CR0)
 
-    jmp next
+    jmp next            ; salto lejano (far jump) para recargar el segmento de código
 next:
     mov ax, 0x10        ; segmento de datos
-    mov ds, ax
+    mov ds, ax          
     mov fs, ax
     mov gs, ax
     mov es, ax
@@ -77,7 +79,7 @@ next:
 
 ;--------------------------------------------------------------------
 bootdrv:  db 0
-msgDebut: db "Cargando el núcleo...", 13, 10, 0
+msgDebut: db "Cargando el nucleo...", 13, 10, 0
 ;--------------------------------------------------------------------
 gdt:
     db 0, 0, 0, 0, 0, 0, 0, 0

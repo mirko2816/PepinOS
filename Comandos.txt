@@ -7,11 +7,12 @@ Instalación del compilador de ensamblador
 Instalación de QEMU
     apt install qemu-system
 
-Compilar con NASM
+Compilar con NASM (NO OLVIDAR COMPILAR TAMBIEN EL KERNEL XD)
     nasm -f bin -o bootsect bootsect.asm
+    nasm -f bin -o kernel kernel.asm
 
-Concatenar el binario con ceros y montar en el floppyA
-    cat bootsect /dev/zero | dd of=floppyA bs=512 count=2880
+Concatenar el binario con ceros Y EL KERNEL y montar en el floppyA
+    cat bootsect kernel /dev/zero | dd of=floppyA bs=512 count=2880
 
 Ejecutar QEMU con el disco 
     qemu-system-i386 -boot a -fda floppyA

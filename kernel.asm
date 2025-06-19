@@ -1,28 +1,17 @@
-[BITS 16]
-[ORG 0x0]
+[BITS 32]
+[ORG 0x1000]
 
-jmp start
-
-%include "UTIL.INC"
-
-start:
-; Inicializa el DS y ES en 0x100
-    mov ax, 0x100       ; Segmento base del kernel (dirección física 0x1000)
-    mov ds, ax
-    mov es, ax          ; Inicializa el segmento extra
-
-; Inicializa el segmento de pila
-    mov ax, 0x8000      ; Segmento de pila (stack) → dirección 0x80000
-    mov ss, ax          ; Segmento de pila
-    mov sp, 0xf000      ; Puntero de pila. La pila empieza en 0x8F000 y crece hacia abajo.
-
-; Muestra un mensaje
-    mov si, msg00
-    call afficher
+; Mostrar un mensaje escribiendo en la RAM de video
+    mov byte [0xB8A00], 'H'
+    mov byte [0xB8A01], 0x57
+    mov byte [0xB8A02], 'E'
+    mov byte [0xB8A03], 0x0A
+    mov byte [0xB8A04], 'L'
+    mov byte [0xB8A05], 0x4E
+    mov byte [0xB8A06], 'L'
+    mov byte [0xB8A07], 0x62
+    mov byte [0xB8A08], 'O'
+    mov byte [0xB8A09], 0x0E
 
 end:
     jmp end
-
-
-msg00: db 'Kernel is speaking !', 10, 0
-
