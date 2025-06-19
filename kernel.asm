@@ -1,17 +1,26 @@
 [BITS 32]
-[ORG 0x1000]
 
-; Mostrar un mensaje escribiendo en la RAM de video
-    mov byte [0xB8A00], 'H'
-    mov byte [0xB8A01], 0x57
-    mov byte [0xB8A02], 'E'
-    mov byte [0xB8A03], 0x0A
-    mov byte [0xB8A04], 'L'
-    mov byte [0xB8A05], 0x4E
-    mov byte [0xB8A06], 'L'
-    mov byte [0xB8A07], 0x62
-    mov byte [0xB8A08], 'O'
-    mov byte [0xB8A09], 0x0E
+EXTERN scrollup, print
+GLOBAL _start
+
+_start:
+
+    mov  eax, msg
+    push eax
+    call print
+    pop  eax
+
+    mov  eax, msg2
+    push eax
+    call print
+    pop  eax
+
+    mov  eax, 2
+    push eax
+    call scrollup
 
 end:
     jmp end
+
+msg  db 'un premier message', 10, 0     
+msg2 db 'un deuxieme message', 10, 0

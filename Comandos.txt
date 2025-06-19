@@ -16,3 +16,14 @@ Concatenar el binario con ceros Y EL KERNEL y montar en el floppyA
 
 Ejecutar QEMU con el disco 
     qemu-system-i386 -boot a -fda floppyA
+
+
+
+Comandos modificados para el cap V:
+    compilar screen.c en modo 32 bits
+        gcc -m32 -c screen.c -o screen.o
+        nasm -f elf -o kernel.o kernel.asm
+
+    enlazar 
+        ld -m elf_i386 --oformat binary -Ttext 0x1000 kernel.o screen.o -o kernel
+
