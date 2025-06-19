@@ -1,0 +1,11 @@
+compilamos a los C a .o
+    gcc -m32 -ffreestanding -fno-pic -c screen.c -o screen.o
+    gcc -m32 -ffreestanding -fno-pic -c kernel.c -o kernel.o
+    gcc -m32 -ffreestanding -fno-pic -c lib.c -o lib.o
+    gcc -m32 -ffreestanding -fno-pic -c gdt.c -o gdt.o
+
+enlazamos
+    ld -m elf_i386 --oformat binary -Ttext 0x1000 kernel.o screen.o -o kernel
+
+la concatenacion se hace fuera de este directorio (../)
+    cat boot/bootsect kern/kernel /dev/zero | dd of=floppyA bs=512 count=2880
